@@ -46,11 +46,12 @@ class Bridge(EventMixin):
             if node_ip is None:
                 LOG.debug("dropping unknown dst %s" % packet.dst) 
                 return      
-            out_port = int(DB.get_gre_port(self.br_mac, node_ip))  
+            out_port = DB.get_gre_port(self.br_mac, node_ip)
             if out_port is None:
                 # ignore access bridge unicast flood for a local vm
                 LOG.debug("packet for VM on node_ip = %s, dropping" % node_ip )
                 return      
+            out_port = int(out_port)
             self.send_packet(self.patch_port, event.ofp.buffer_id, out_port)
             # install tempory flow for subsequent matches with this mac
             self.install_flow(self.patch_port, out_port, packet.dst,
