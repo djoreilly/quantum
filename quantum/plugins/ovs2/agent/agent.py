@@ -87,8 +87,9 @@ class Subscriber(Thread):
                     time.sleep(5)
                     # need to re-subscribe at outer loop after broken socket
                     break  
-                net_id = msg['data']
-                Q.put( SyncTunnels(net_id) )
+                if msg['type'] == 'message':
+                    net_id = msg['data']
+                    Q.put( SyncTunnels(net_id) )
  
 
 class Command:
